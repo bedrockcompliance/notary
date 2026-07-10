@@ -1,8 +1,7 @@
 import { generateKeyPairSync, sign, type KeyObject } from 'node:crypto';
 import { describe, it, expect, beforeAll } from 'vitest';
 
-import { computeChainHash } from '../src/chain';
-import { sha256 } from '../src/hash';
+import { computeChainHash, sha256 } from '../src/hash';
 import { verifySignature } from '../src/signature';
 import { ChainInvalidReason, GENESIS_HASH, type LedgerRecordProjection } from '../src/types';
 

@@ -1,16 +1,16 @@
 {
-  "name": "@bedrockcompliance/notary",
-  "version": "0.1.1",
+  "name": "@bedrockgovernance/notary",
+  "version": "0.2.0",
   "description": "Hash and signature engine for the Bedrock immutable advice ledger — computes and verifies record hashes, chain hashes and ECDSA P-256 signatures.",
   "license": "Apache-2.0",
   "author": "Luke Bettridge",
-  "homepage": "https://bedrockcompliance.co.uk/docs/concepts/notary",
+  "homepage": "https://bedrockgovernance.com/docs/concepts/notary",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bedrockcompliance/notary.git"
+    "url": "https://github.com/bedrockgovernance/notary.git"
   },
   "bugs": {
-    "url": "https://github.com/bedrockcompliance/notary/issues"
+    "url": "https://github.com/bedrockgovernance/notary/issues"
   },
   "keywords": [
     "bedrock",

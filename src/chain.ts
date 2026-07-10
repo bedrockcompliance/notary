@@ -4,8 +4,9 @@
  * @packageDocumentation
  */
 
-import { sha256 } from './hash';
+import { computeChainHash } from './hash';
 import { computeRecordHash } from './record';
+import { verifySignature } from './signature';
 import {
   ChainInvalidReason,
   GENESIS_HASH,
@@ -14,24 +15,25 @@ import {
 } from './types';
 
 /**
- * Compute the chain hash for a record.
- *
- * @param recordHash - SHA-256 of the canonical JSON of the record's
- *   payload.
- * @param previousHash - The previous record's `chainHash`, or
- *   {@link GENESIS_HASH} for the first record on the chain.
- * @returns Lower-case hex SHA-256 of `recordHash || previousHash`.
- *
- * @example
- * ```ts
- * const chainHash = computeChainHash(
- *   sha256(canonicalise(payload)),
- *   GENESIS_HASH,
- * );
- * ```
+ * Optional behaviour switches for {@link verifyChain}.
  */
-export function computeChainHash(recordHash: string, previousHash: string): string {
-  return sha256(recordHash + previousHash);
+export interface VerifyChainOptions {
+  /**
+   * Base64-encoded SPKI DER public keys the caller trusts as the
+   * platform's own — the current signing key plus any retired keys
+   * still needed to verify records signed before a rotation.
+   *
+   * When provided, each record's ECDSA signature is verified and
+   * pinned to this set once its structural checks pass: a record
+   * whose embedded key is not in the set, or whose signature does not
+   * verify, fails with `SIGNATURE_INVALID`. This rejects a record
+   * forged with its own key even though its hash chain is internally
+   * consistent.
+   *
+   * Omit it to check chain structure only — callers who hold the
+   * chain but not the key can still detect structural tampering.
+   */
+  trustedPublicKeys?: Iterable<string>;
 }
 
 /**
@@ -50,10 +52,11 @@ export function computeChainHash(recordHash: string, previousHash: string): stri
  *      (catches edits to either field).
  *
  * If any check fails, verification stops at that record and the
- * result identifies it. Signature verification is performed
- * separately by {@link verifySignature} so that callers who only
- * have the chain (without the public key) can still detect tampering
- * in the structure.
+ * result identifies it. Signature verification is skipped by default
+ * so that callers who only have the chain (without the public key)
+ * can still detect tampering in the structure; pass
+ * {@link VerifyChainOptions.trustedPublicKeys} to additionally verify
+ * and pin every record's signature.
  *
  * @param records - The records to verify, ordered by `sequenceNumber`
  *   ascending and starting from the firm's genesis record (the
@@ -62,13 +65,18 @@ export function computeChainHash(recordHash: string, previousHash: string): stri
  *   a mid-chain slice is not currently supported.
  * @param firmId - Firm identifier echoed back on the result. Not
  *   compared against the records themselves.
+ * @param options - Optional {@link VerifyChainOptions}; pass
+ *   `trustedPublicKeys` to pin signatures against the platform's keys.
  * @returns A {@link ChainVerificationResult} describing the outcome.
  */
 export function verifyChain(
   records: readonly LedgerRecordProjection[],
   firmId: string,
+  options: VerifyChainOptions = {},
 ): ChainVerificationResult {
   const verifiedAt = new Date().toISOString();
+  const trustedPublicKeys =
+    options.trustedPublicKeys !== undefined ? new Set(options.trustedPublicKeys) : null;
 
   if (records.length === 0) {
     return {
@@ -116,6 +124,15 @@ export function verifyChain(
     const expectedChainHash = computeChainHash(record.recordHash, record.previousHash);
     if (record.chainHash !== expectedChainHash) {
       return failure(records, firmId, verifiedAt, record, ChainInvalidReason.HASH_MISMATCH);
+    }
+
+    if (trustedPublicKeys !== null) {
+      if (!trustedPublicKeys.has(record.publicKey)) {
+        return failure(records, firmId, verifiedAt, record, ChainInvalidReason.SIGNATURE_INVALID);
+      }
+      if (!verifySignature(record, { trustedPublicKey: record.publicKey }).valid) {
+        return failure(records, firmId, verifiedAt, record, ChainInvalidReason.SIGNATURE_INVALID);
+      }
     }
   }
 

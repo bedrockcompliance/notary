@@ -36,7 +36,7 @@ export type VerifyCertificateOptions = VerifySignatureOptions;
  * @example
  * ```ts
  * const response = await fetch(
- *   `https://api.bedrockledger.com/v1/verify/${certificateId}`,
+ *   `https://api.bedrockgovernance.com/v1/verify/${certificateId}`,
  * );
  * const { certificate, record } = await response.json();
  * const result = verifyCertificate({ certificate, record });

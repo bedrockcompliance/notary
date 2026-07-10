@@ -14,8 +14,7 @@ import { join } from 'node:path';
 import { describe, it, expect } from 'vitest';
 
 import { canonicalise } from '../src/canonicalise';
-import { computeChainHash } from '../src/chain';
-import { sha256 } from '../src/hash';
+import { computeChainHash, sha256 } from '../src/hash';
 import { computeRecordHash } from '../src/record';
 
 const fixturesDir = join(__dirname, '..', 'fixtures');
