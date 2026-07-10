@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to `@bedrockcompliance/notary` will be documented in
+All notable changes to `@bedrockgovernance/notary` will be documented in
 this file. The format is based on [Keep a Changelog][keep] and the
 package adheres to [Semantic Versioning][semver].
 
@@ -8,6 +8,24 @@ package adheres to [Semantic Versioning][semver].
 [semver]: https://semver.org/spec/v2.0.0.html
 
 ## [Unreleased]
+
+## [0.2.0] — 2026-07-10
+
+### Changed
+
+- **Renamed the package** from `@bedrockcompliance/notary` to
+  `@bedrockgovernance/notary`. Update your dependency and imports; the
+  API is otherwise unchanged. The old package name is no longer
+  published.
+
+### Added
+
+- `verifyChain` accepts an optional `trustedPublicKeys` set
+  (`VerifyChainOptions`). When provided, each record's ECDSA signature
+  is verified and pinned to the trusted set once its structural checks
+  pass — a record forged with its own key is rejected as
+  `SIGNATURE_INVALID` even though its hash chain is self-consistent.
+  Omitting the option preserves the previous structure-only behaviour.
 
 ## [0.1.1] — 2026-04-10
 

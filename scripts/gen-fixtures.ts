@@ -1,7 +1,7 @@
 /**
  * Generate the shared cross-language fixture corpus.
  *
- * Run with `pnpm --filter @bedrockledger/notary gen:fixtures`.
+ * Run with `pnpm --filter @bedrockgovernance/notary gen:fixtures`.
  */
 
 import { writeFileSync } from 'node:fs';
@@ -9,8 +9,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { canonicalise } from '../src/canonicalise';
-import { computeChainHash } from '../src/chain';
-import { sha256 } from '../src/hash';
+import { computeChainHash, sha256 } from '../src/hash';
 import { computeRecordHash } from '../src/record';
 import { GENESIS_HASH } from '../src/types';
 

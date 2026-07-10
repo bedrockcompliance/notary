@@ -1,9 +1,9 @@
-# @bedrockcompliance/notary
+# @bedrockgovernance/notary
 
 > The hash and signature engine behind the
-> [Bedrock](https://bedrockcompliance.co.uk) immutable advice ledger.
+> [Bedrock](https://bedrockgovernance.com) immutable advice ledger.
 
-`@bedrockcompliance/notary` contains the canonical JSON serialiser, the
+`@bedrockgovernance/notary` contains the canonical JSON serialiser, the
 record and chain hash functions, and the ECDSA P-256 signature
 verifier that underpin the Bedrock ledger. The Bedrock platform
 imports it on both the **write path** (computing hashes when records
@@ -19,7 +19,7 @@ No signing implementations, no private keys, no networking.
 ## Install
 
 ```sh
-npm install @bedrockcompliance/notary
+npm install @bedrockgovernance/notary
 ```
 
 ## Quickstart
@@ -27,7 +27,7 @@ npm install @bedrockcompliance/notary
 ### Compute a record hash (same function the Bedrock writer uses)
 
 ```ts
-import { computeRecordHash, computeChainHash, GENESIS_HASH } from '@bedrockcompliance/notary';
+import { computeRecordHash, computeChainHash, GENESIS_HASH } from '@bedrockgovernance/notary';
 
 const recordHash = computeRecordHash(payload);
 const chainHash = computeChainHash(recordHash, previousHash ?? GENESIS_HASH);
@@ -36,10 +36,10 @@ const chainHash = computeChainHash(recordHash, previousHash ?? GENESIS_HASH);
 ### Verify a certificate
 
 ```ts
-import { verifyCertificate } from '@bedrockcompliance/notary';
+import { verifyCertificate } from '@bedrockgovernance/notary';
 
 const response = await fetch(
-  `https://api.bedrockcompliance.co.uk/v1/verify/${certificateId}`,
+  `https://api.bedrockgovernance.com/v1/verify/${certificateId}`,
 );
 const { certificate, record } = await response.json();
 
@@ -52,7 +52,7 @@ if (!result.valid) {
 ### Verify a chain
 
 ```ts
-import { verifyChain } from '@bedrockcompliance/notary';
+import { verifyChain } from '@bedrockgovernance/notary';
 
 const result = verifyChain(records, firmId);
 ```

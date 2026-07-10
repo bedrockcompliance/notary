@@ -6,7 +6,7 @@
 
 import { createPublicKey, verify, type KeyObject } from 'node:crypto';
 
-import { computeChainHash } from './chain';
+import { computeChainHash } from './hash';
 import {
   ChainInvalidReason,
   type LedgerRecordProjection,

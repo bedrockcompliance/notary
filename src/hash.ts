@@ -31,3 +31,24 @@ export function sha256(input: string): string {
 export function sha256Buffer(buffer: Buffer): string {
   return createHash('sha256').update(buffer).digest('hex');
 }
+
+/**
+ * Compute the chain hash for a record.
+ *
+ * @param recordHash - SHA-256 of the canonical JSON of the record's
+ *   payload.
+ * @param previousHash - The previous record's `chainHash`, or the
+ *   genesis hash for the first record on the chain.
+ * @returns Lower-case hex SHA-256 of `recordHash || previousHash`.
+ *
+ * @example
+ * ```ts
+ * const chainHash = computeChainHash(
+ *   sha256(canonicalise(payload)),
+ *   GENESIS_HASH,
+ * );
+ * ```
+ */
+export function computeChainHash(recordHash: string, previousHash: string): string {
+  return sha256(recordHash + previousHash);
+}

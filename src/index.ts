@@ -1,13 +1,13 @@
 /**
- * `@bedrockledger/notary` -- open verifier and canonical-form library
- * for the Bedrock immutable advice ledger.
+ * `@bedrockgovernance/notary` -- open verifier and canonical-form
+ * library for the Bedrock immutable advice ledger.
  *
  * @packageDocumentation
  */
 
 export { canonicalise } from './canonicalise';
-export { sha256, sha256Buffer } from './hash';
-export { computeChainHash, verifyChain } from './chain';
+export { sha256, sha256Buffer, computeChainHash } from './hash';
+export { verifyChain, type VerifyChainOptions } from './chain';
 export { computeRecordHash } from './record';
 export { verifySignature } from './signature';
 export { verifyCertificate, type VerifyCertificateInput } from './certificate';
